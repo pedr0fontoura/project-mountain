@@ -1,4 +1,5 @@
 from PPlay.sprite import *
+from PPlay.collision import Collision
 
 class Player:
   SPEED = 600
@@ -151,6 +152,18 @@ class Player:
     self.sprite.draw()
     self.sprite.update()
 
+  def isOnPlatform(self, platform):
+    return self.sprite.collided(platform.sprite)
+
+  def handleCollision(self):
+    for platform in self.game.platforms:
+      if (self.isOnPlatform(platform)):
+        self.dy = 0
+        self.y = platform.sprite.y - self.sprite.height
+
+        if (self.isJumping):
+          self.isJumping = False
+
   def tick(self):
     if (self.isFalling):
       self.dy += Player.GRAVITY * self.game.window.delta_time()
@@ -172,5 +185,6 @@ class Player:
 
     self.dx = 0
 
+    self.handleCollision()
     self.handleInputs()
     self.draw()
