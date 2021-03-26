@@ -1,23 +1,21 @@
 from PPlay.sprite import *
 
 class Player:
-  WIDTH = 128
-  HEIGHT = 128
   SPEED = 600
   GRAVITY = SPEED * 2
 
-  SPRITE_IDLE_LEFT_PATH = 'assets/hiker/128x128/idleLeft.png'
-  SPRITE_IDLE_RIGHT_PATH = 'assets/hiker/128x128/idleRight.png'
+  SPRITE_IDLE_LEFT_PATH = 'assets/hiker/idleLeft.png'
+  SPRITE_IDLE_RIGHT_PATH = 'assets/hiker/idleRight.png'
   SPRITE_IDLE_FRAMES = 6
   SPRITE_IDLE_ANIM_DURATION = 1000
 
-  SPRITE_MOVE_LEFT_PATH = 'assets/hiker/128x128/moveLeft.png'
-  SPRITE_MOVE_RIGHT_PATH = 'assets/hiker/128x128/moveRight.png'
+  SPRITE_MOVE_LEFT_PATH = 'assets/hiker/moveLeft.png'
+  SPRITE_MOVE_RIGHT_PATH = 'assets/hiker/moveRight.png'
   SPRITE_MOVE_FRAMES = 8
   SPRITE_MOVE_ANIM_DURATION = 500
 
-  SPRITE_JUMP_LEFT_PATH = 'assets/hiker/128x128/jumpLeft.png'
-  SPRITE_JUMP_RIGHT_PATH = 'assets/hiker/128x128/jumpRight.png'
+  SPRITE_JUMP_LEFT_PATH = 'assets/hiker/jumpLeft.png'
+  SPRITE_JUMP_RIGHT_PATH = 'assets/hiker/jumpRight.png'
   SPRITE_JUMP_FRAMES = 3
   SPRITE_JUMP_ANIM_DURATION = 500
 
@@ -33,23 +31,21 @@ class Player:
   def __init__(self, game):
     self.game = game
 
-    self.x = self.game.window.width / 2 - Player.WIDTH / 2
-    self.y = self.game.window.height - Player.HEIGHT
+    self.sprites = []
+    self.loadSprites()
+
+    self.spriteState = 'idleRight'
+
+    self.sprite = self.getSprite()
+
+    self.x = self.game.window.width / 2 - self.sprite.width / 2
+    self.y = self.game.window.height - self.sprite.height
 
     self.dx = 0
     self.dy = 0
-
-    self.spriteState = 'idleRight'
     
-    self.canJump = True
     self.isJumping = False
-    self.lastJump = 0
-
     self.isFalling = False
-    
-    self.sprites = []
-
-    self.loadSprites()
 
   def loadSprites(self):
     idleLeft = Sprite(Player.SPRITE_IDLE_LEFT_PATH, Player.SPRITE_IDLE_FRAMES)
@@ -95,16 +91,21 @@ class Player:
 
     if not self.isJumping:
       self.spriteState = 'moveLeft'
+    else:
+      self.spriteState = 'jumpLeft'
 
   def moveRight(self):
     self.dx = Player.SPEED
 
     if not self.isJumping:
       self.spriteState = 'moveRight'
+    else:
+      self.spriteState = 'jumpRight'
 
   def jump(self):
     if (not self.isJumping):
       self.isJumping = True
+      self.isFalling = True
       self.lastJump = 0
       self.dy = -Player.SPEED
 
@@ -138,23 +139,27 @@ class Player:
     else:
       self.idle()
 
+  def getSprite(self):
+    return self.sprites[Player.SPRITE_STATE[self.spriteState]]
+
   def draw(self):
-    sprite = self.sprites[Player.SPRITE_STATE[self.spriteState]]
+    self.sprite = self.getSprite()
 
-    sprite.x = self.x
-    sprite.y = self.y
+    self.sprite.x = self.x
+    self.sprite.y = self.y
 
-    sprite.draw()
-    sprite.update()
+    self.sprite.draw()
+    self.sprite.update()
 
   def tick(self):
-    self.dy += Player.GRAVITY * self.game.window.delta_time()
+    if (self.isFalling):
+      self.dy += Player.GRAVITY * self.game.window.delta_time()
 
     self.x += self.dx * self.game.window.delta_time()
     self.y += self.dy * self.game.window.delta_time()
 
-    if (self.y + Player.HEIGHT > self.game.window.height):
-      self.y = self.game.window.height - Player.HEIGHT
+    if (self.y + self.sprite.height > self.game.window.height):
+      self.y = self.game.window.height - self.sprite.height
       self.dy = 0
       self.isJumping = False
       self.idle()
@@ -162,8 +167,10 @@ class Player:
     if (self.x >= self.game.window.width):
       self.x = 0
 
-    if (self.x + Player.WIDTH <= 0):
-      self.x = self.game.window.width - Player.WIDTH
+    if (self.x + self.sprite.width <= 0):
+      self.x = self.game.window.width - self.sprite.width
+
+    self.dx = 0
 
     self.handleInputs()
     self.draw()

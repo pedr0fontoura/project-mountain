@@ -2,3 +2,6 @@
 __pycache__/
 
 PPlay/
+
+assets/raw/
+*.aseprite
