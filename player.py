@@ -20,7 +20,7 @@ class Player:
   SPRITE_JUMP_LEFT_PATH = 'assets/hiker/jumpLeft.png'
   SPRITE_JUMP_RIGHT_PATH = 'assets/hiker/jumpRight.png'
   SPRITE_JUMP_FRAMES = 3
-  SPRITE_JUMP_ANIM_DURATION = 500
+  SPRITE_JUMP_ANIM_DURATION = 250
 
   SPRITE_STATE = {
     'idleLeft': 0,
@@ -117,7 +117,15 @@ class Player:
       elif (self.spriteState == 'moveRight' or self.spriteState == 'idleRight'):
         self.spriteState = 'jumpRight'
 
+      # Reset animation
+      sprite = self.getSprite()
+      sprite.set_curr_frame(0)
+      sprite.play()
+
   def handleInputs(self):
+    if (not self.game.isGameStarted):
+      return
+
     inputPressed = {
       'A': self.game.keyboard.key_pressed('A'),
       'LEFT': self.game.keyboard.key_pressed('LEFT'),
