@@ -3,8 +3,6 @@ from PPlay.sprite import *
 class Platform:
   SPRITE_PATH = 'assets/platform.png'
 
-  COLLISION_Y_THRESHOLD = 10
-
   def __init__(self, game, x, y):
     self.game = game
 

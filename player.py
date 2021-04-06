@@ -2,8 +2,10 @@ from PPlay.sprite import *
 from PPlay.collision import Collision
 
 class Player:
-  SPEED = 600
+  SPEED = 450
   GRAVITY = SPEED * 2
+
+  COLLISION_THRESHOLD = 10
 
   SPRITE_IDLE_LEFT_PATH = 'assets/hiker/idleLeft.png'
   SPRITE_IDLE_RIGHT_PATH = 'assets/hiker/idleRight.png'
@@ -152,24 +154,40 @@ class Player:
     self.sprite.draw()
     self.sprite.update()
 
-  def isOnPlatform(self, platform):
-    return self.sprite.collided(platform.sprite)
-
   def handleCollision(self):
     for platform in self.game.platforms:
-      if (self.isOnPlatform(platform)):
-        self.dy = 0
-        self.y = platform.sprite.y - self.sprite.height
+        if (self.sprite.collided(platform.sprite)):
+          # Top
+          if ((self.sprite.y + self.sprite.height - Player.COLLISION_THRESHOLD) <= platform.y):
+            self.dy = 0
+            self.y = platform.sprite.y - self.sprite.height
 
-        if (self.isJumping):
-          self.isJumping = False
+            if (self.isJumping):
+              self.isJumping = False
+          else:
+            # Bottom
+            if (self.dy < 0 and self.y >= platform.y + platform.sprite.height - Player.COLLISION_THRESHOLD):
+              self.dy = 0
+              self.y = platform.y + platform.sprite.height
+            
+            if (platform.y >= self.y and platform.y <= self.y + self.sprite.y or platform.y + platform.sprite.height >= self.y and platform.y + platform.sprite.height <= self.y + self.sprite.y):
+              # Left
+              if (self.dx > 0 and self.x <= platform.x):
+                self.dx = 0
+                self.x = platform.x - self.sprite.width
+              
+              # Right
+              if (self.dx < 0 and self.x >= (platform.x + platform.sprite.width - Player.COLLISION_THRESHOLD)):
+                self.dx = 0
+                self.x = platform.x + platform.sprite.width
 
   def tick(self):
-    if (self.isFalling):
-      self.dy += Player.GRAVITY * self.game.window.delta_time()
+    self.dy += Player.GRAVITY * self.game.window.delta_time()
 
     self.x += self.dx * self.game.window.delta_time()
     self.y += self.dy * self.game.window.delta_time()
+
+    self.handleCollision()
 
     if (self.y + self.sprite.height > self.game.window.height):
       self.y = self.game.window.height - self.sprite.height
@@ -185,6 +203,5 @@ class Player:
 
     self.dx = 0
 
-    self.handleCollision()
     self.handleInputs()
     self.draw()
