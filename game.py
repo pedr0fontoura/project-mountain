@@ -22,6 +22,8 @@ class Game:
 
   PLATFORM_SPAWN_AREA = WINDOW_WIDTH / 4
 
+  DESCENT_SPEED = 50
+
   def __init__(self):
     self.window = Window(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT)
     self.window.set_title(Game.TITLE)
@@ -57,25 +59,13 @@ class Game:
     for i in range(1, platformNumber):
       self.platforms.append(Platform(self, Game.GROUND_X + platformWidth * i, Game.GROUND_Y))
 
-  def generateMap(self):
-    platformNumber = 8
+  def descend(self):
+    deltaTime = self.window.delta_time()
 
-    sprite = Platform(self, 0, 0).sprite
+    for platform in self.platforms:
+      platform.y += Game.DESCENT_SPEED * deltaTime
 
-    x = Game.WINDOW_WIDTH / 2 - Game.PLATFORM_SPAWN_AREA
-    y = Game.GROUND_Y - int(self.player.sprite.height * 1.2)
-
-    leftRight = False
-    for i in range(platformNumber):
-      self.platforms.append(Platform(self, x, y))
-
-      leftRight = not leftRight
-      if (leftRight):
-        x += sprite.width + self.player.sprite.width * 2
-      else:
-        x -= sprite.width + self.player.sprite.width * 2
-
-      y -= int(self.player.sprite.height * 1.2)
+    self.player.y += Game.DESCENT_SPEED * deltaTime
       
 
   def tick(self):
@@ -86,13 +76,15 @@ class Game:
     for platform in self.platforms:
       platform.tick()
 
-    if (not self.isGameStarted):
+    if (self.isGameStarted):
+      self.descend()
+    else:
       self.fade.draw()
       self.logo.draw()
       self.action.draw()
 
       if (self.keyboard.key_pressed('SPACE')):
         self.isGameStarted = True
-        self.generateMap()
+      
 
     self.window.update()
