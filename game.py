@@ -1,16 +1,15 @@
-import math
-import random
 from PPlay.window import *
 from PPlay.sprite import *
 from player import Player
 from platform import Platform
+from mapmanager import MapManager
 
 class Game:
 
   WINDOW_WIDTH = 1280
   WINDOW_HEIGHT = 720
-  
   TITLE = 'Project Mountain v1.0.0-alpha'
+  DEBUG = True
   
   BACKGROUND_PATH = 'assets/bg.png'
   LOGO_PATH = 'assets/logo.png'
@@ -45,19 +44,10 @@ class Game:
     self.isGameStarted = False
 
     self.player = Player(self)
-    self.platforms = []
+    self.mapManager = MapManager(self)
 
-    self.generateGround()
-
-  def generateGround(self):
-    self.platforms.append(Platform(self, Game.GROUND_X, Game.GROUND_Y))
-
-    platformWidth = self.platforms[0].sprite.width - 20
-
-    platformNumber = int(math.ceil(self.window.width / platformWidth))
-
-    for i in range(1, platformNumber):
-      self.platforms.append(Platform(self, Game.GROUND_X + platformWidth * i, Game.GROUND_Y))
+    self.mapManager.generateGround()
+    self.mapManager.createPlatforms()
 
   def descend(self):
     deltaTime = self.window.delta_time()
@@ -72,13 +62,9 @@ class Game:
     self.background.draw()
     
     self.player.tick()
-    
-    for platform in self.platforms:
-      platform.tick()
+    self.mapManager.tick()
 
-    if (self.isGameStarted):
-      self.descend()
-    else:
+    if (not self.isGameStarted):
       self.fade.draw()
       self.logo.draw()
       self.action.draw()

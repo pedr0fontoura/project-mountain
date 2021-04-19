@@ -163,7 +163,7 @@ class Player:
     self.sprite.update()
 
   def handleCollision(self):
-    for platform in self.game.platforms:
+    for platform in self.game.mapManager.platforms:
         if (self.sprite.collided(platform.sprite)):
           # Top
           if ((self.sprite.y + self.sprite.height - Player.COLLISION_THRESHOLD) <= platform.y):
