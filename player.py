@@ -178,14 +178,15 @@ class Player:
               self.dy = 0
               self.y = platform.y + platform.sprite.height
             
+            # Horizontal collision
             if (platform.y >= self.y and platform.y <= self.y + self.sprite.y or platform.y + platform.sprite.height >= self.y and platform.y + platform.sprite.height <= self.y + self.sprite.y):
               # Left
-              if (self.dx > 0 and self.x <= platform.x):
+              if (self.dx >= 0 and self.x <= platform.x):
                 self.dx = 0
                 self.x = platform.x - self.sprite.width
               
               # Right
-              if (self.dx < 0 and self.x >= (platform.x + platform.sprite.width - Player.COLLISION_THRESHOLD)):
+              elif (self.dx <= 0 and self.x + self.sprite.width >= platform.x + platform.sprite.width):
                 self.dx = 0
                 self.x = platform.x + platform.sprite.width
 
