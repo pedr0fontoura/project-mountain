@@ -42,7 +42,7 @@ class Player:
     self.sprite = self.getSprite()
 
     self.x = self.game.window.width / 2 - self.sprite.width / 2
-    self.y = self.game.window.height - self.sprite.height
+    self.y = self.game.GROUND_Y - self.sprite.height
 
     self.dx = 0
     self.dy = 0
@@ -191,24 +191,29 @@ class Player:
                 self.x = platform.x + platform.sprite.width
 
   def tick(self):
-    self.dy += Player.GRAVITY * self.game.window.delta_time()
+    deltaTime = self.game.window.delta_time()
 
-    self.x += self.dx * self.game.window.delta_time()
-    self.y += self.dy * self.game.window.delta_time()
+    self.dy += Player.GRAVITY * deltaTime
+
+    self.x += self.dx * deltaTime
+    self.y += self.dy * deltaTime
 
     self.handleCollision()
 
-    if (self.y + self.sprite.height > self.game.window.height):
-      self.y = self.game.window.height - self.sprite.height
-      self.dy = 0
-      self.isJumping = False
-      self.idle()
+    # Simulate camera movement when player reach the top 1/4 of the screen
+    if (self.y <= self.game.WINDOW_HEIGHT / 4):
+      self.y += abs(self.dy) * deltaTime
+      self.game.mapManager.descend(abs(self.dy))
 
     if (self.x >= self.game.window.width):
       self.x = 0
 
     if (self.x + self.sprite.width <= 0):
       self.x = self.game.window.width - self.sprite.width
+      
+    # Handle player below the screen
+    if (self.y > self.game.window.height):
+      self.game.stop()
 
     self.dx = 0
 

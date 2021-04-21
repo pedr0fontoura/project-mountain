@@ -6,6 +6,18 @@ from platform import Platform
 Vector2 = pygame.math.Vector2
 
 class MapManager:
+  PLATFORM_WIDTH = 196
+  PLATFORM_HEIGHT = 32
+
+  CHUNK_X_SIZE = PLATFORM_WIDTH
+  CHUNK_Y_SIZE = PLATFORM_HEIGHT * 3
+
+  DELTAS = [
+    Vector2(1, 1),
+    Vector2(-1, 1)
+  ]
+
+  DESCENT_SPEED = 5
 
   def __init__(self, game):
     self.game = game
@@ -21,44 +33,20 @@ class MapManager:
     for i in range(1, platformNumber):
       self.platforms.append(Platform(self.game, self.game.GROUND_X + platformWidth * i, self.game.GROUND_Y))
 
-  def points(self, number, center, radius):
-    pointList = []
-    for i in range(number):
-      angle = random.randint(45, 135)
+  def descend(self, distance):
+    deltaTime = self.game.window.delta_time()
 
-      base = center
-
-      if (i > 1):
-        base = pointList[i - 1]
-      
-      vec = base + Vector2(128, 0).rotate(-angle)
-
-      if (vec.x <= base.x):
-        vec.x -= 192
-
-      pointList.append(Vector2(int(vec.x), int(vec.y)))
-    return pointList
-
-  def createPlatforms(self):
-    ply = self.game.player
-    x = ply.x + ply.sprite.width / 2
-    y = ply.y + ply.sprite.height / 2
-    
-    pcoords = self.points(5, Vector2(x, y), 64)
-    
-    for coords in pcoords:
-      platform = Platform(self.game, coords.x, coords.y)
-
-      self.platforms.append(platform)
+    for platform in self.platforms:
+      platform.y += distance * deltaTime
 
   def tick(self):
     for platform in self.platforms:
       platform.tick()
 
-    if (self.game.DEBUG):
+    if (self.game.DEBUG > 0):
       ply = self.game.player
       x = ply.x + ply.sprite.width / 2
       y = ply.y + ply.sprite.height / 2
 
-      pygame.draw.rect(self.game.window.screen, (255, 0, 0), (ply.x, ply.y, ply.sprite.width, ply.sprite.height))
+      pygame.draw.rect(self.game.window.screen, (255, 0, 0), (ply.x, ply.y, ply.sprite.width, ply.sprite.height), True)
       pygame.draw.circle(self.game.window.screen, (255, 0, 0), (x, y), 128, True)

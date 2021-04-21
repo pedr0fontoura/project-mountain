@@ -24,7 +24,7 @@ class Platform:
     self.sprite.y = self.y
     self.sprite.draw()
 
-    if (self.game.DEBUG):
+    if (self.game.DEBUG > 1):
       self.game.window.draw_text("{} , {}".format(self.x, self.y), self.x - 15, self.y, 12, (255, 0, 0), "Arial")
 
   def tick(self):

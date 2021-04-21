@@ -9,7 +9,7 @@ class Game:
   WINDOW_WIDTH = 1280
   WINDOW_HEIGHT = 720
   TITLE = 'Project Mountain v1.0.0-alpha'
-  DEBUG = True
+  DEBUG = 1
   
   BACKGROUND_PATH = 'assets/bg.png'
   LOGO_PATH = 'assets/logo.png'
@@ -18,10 +18,6 @@ class Game:
 
   GROUND_X = -10
   GROUND_Y = 710
-
-  PLATFORM_SPAWN_AREA = WINDOW_WIDTH / 4
-
-  DESCENT_SPEED = 50
 
   def __init__(self):
     self.window = Window(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT)
@@ -45,18 +41,14 @@ class Game:
 
     self.player = Player(self)
     self.mapManager = MapManager(self)
-
     self.mapManager.generateGround()
-    self.mapManager.createPlatforms()
 
-  def descend(self):
-    deltaTime = self.window.delta_time()
+  def stop(self):
+    self.isGameStarted = False
 
-    for platform in self.platforms:
-      platform.y += Game.DESCENT_SPEED * deltaTime
-
-    self.player.y += Game.DESCENT_SPEED * deltaTime
-      
+    self.player = Player(self)
+    self.mapManager = MapManager(self)
+    self.mapManager.generateGround()
 
   def tick(self):
     self.background.draw()
