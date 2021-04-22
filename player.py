@@ -47,6 +47,7 @@ class Player:
     self.dx = 0
     self.dy = 0
     
+    self.canJump = True
     self.isJumping = False
     self.isFalling = False
 
@@ -106,7 +107,7 @@ class Player:
       self.spriteState = 'jumpRight'
 
   def jump(self):
-    if (not self.isJumping):
+    if ((not self.isJumping) and self.canJump):
       self.isJumping = True
       self.isFalling = True
       self.lastJump = 0
@@ -163,12 +164,16 @@ class Player:
     self.sprite.update()
 
   def handleCollision(self):
+    self.canJump = False
+
     for platform in self.game.mapManager.platforms:
         if (self.sprite.collided(platform.sprite)):
           # Top
           if ((self.sprite.y + self.sprite.height - Player.COLLISION_THRESHOLD) <= platform.y):
             self.dy = 0
             self.y = platform.sprite.y - self.sprite.height
+
+            self.canJump = True
 
             if (self.isJumping):
               self.isJumping = False
