@@ -19,6 +19,8 @@ class Game:
   GROUND_X = -10
   GROUND_Y = 710
 
+  DESCENT_SPEED = 60
+
   def __init__(self):
     self.window = Window(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT)
     self.window.set_title(Game.TITLE)
@@ -39,24 +41,30 @@ class Game:
 
     self.isGameStarted = False
 
-    self.player = Player(self)
     self.mapManager = MapManager(self)
-    self.mapManager.generateGround()
+    self.mapManager.init()
+
+    self.player = Player(self)
+
 
   def stop(self):
     self.isGameStarted = False
 
     self.player = Player(self)
     self.mapManager = MapManager(self)
-    self.mapManager.generateGround()
+    self.mapManager.init()
 
   def tick(self):
     self.background.draw()
     
-    self.player.tick()
     self.mapManager.tick()
+    self.player.tick()
 
-    if (not self.isGameStarted):
+    if (self.isGameStarted):
+      self.player.descend(Game.DESCENT_SPEED)
+      self.mapManager.descend(Game.DESCENT_SPEED)
+
+    else:
       self.fade.draw()
       self.logo.draw()
       self.action.draw()

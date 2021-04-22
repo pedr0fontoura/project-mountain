@@ -5,7 +5,7 @@ class Platform:
 
   idx = 0
 
-  def __init__(self, game, x, y):
+  def __init__(self, game, x, y, isGround = False):
     self.id = Platform.idx
     Platform.idx += 1
 
@@ -19,6 +19,11 @@ class Platform:
     self.sprite.x = self.x
     self.sprite.y = self.y
 
+    self.isGround = isGround
+    
+    if (not isGround):
+      self.game.mapManager.platformCount += 1
+
   def draw(self):
     self.sprite.x = self.x
     self.sprite.y = self.y
@@ -30,9 +35,13 @@ class Platform:
   def tick(self):
     # If platform is out of bounds, remove from pool
     if (self.y >= self.game.WINDOW_HEIGHT):
+      if (not self.isGround):
+        self.game.mapManager.platformCount -= 1
+
       for platform in self.game.mapManager.platforms:
         if (platform.id == self.id):
           self.game.mapManager.platforms.remove(platform)
+
       return
 
     self.draw()

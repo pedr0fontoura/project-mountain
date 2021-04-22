@@ -177,7 +177,7 @@ class Player:
 
             if (self.isJumping):
               self.isJumping = False
-          else:
+          """ else:
             # Bottom
             if (self.dy < 0 and self.y >= platform.y + platform.sprite.height - Player.COLLISION_THRESHOLD):
               self.dy = 0
@@ -193,7 +193,10 @@ class Player:
               # Right
               elif (self.dx <= 0 and self.x + self.sprite.width >= platform.x + platform.sprite.width):
                 self.dx = 0
-                self.x = platform.x + platform.sprite.width
+                self.x = platform.x + platform.sprite.width """
+  
+  def descend(self, distance):
+    self.y += distance * self.game.window.delta_time()
 
   def tick(self):
     deltaTime = self.game.window.delta_time()
@@ -207,7 +210,7 @@ class Player:
 
     # Simulate camera movement when player reach the top 1/4 of the screen
     if (self.y <= self.game.WINDOW_HEIGHT / 4):
-      self.y += abs(self.dy) * deltaTime
+      self.descend(abs(self.dy))
       self.game.mapManager.descend(abs(self.dy))
 
     if (self.x >= self.game.window.width):
