@@ -9,7 +9,7 @@ class Game:
   WINDOW_WIDTH = 1280
   WINDOW_HEIGHT = 720
   TITLE = 'Project Mountain v1.0.0-alpha'
-  DEBUG = 1
+  DEBUG = 0
   
   BACKGROUND_PATH = 'assets/bg.png'
   LOGO_PATH = 'assets/logo.png'
@@ -45,8 +45,7 @@ class Game:
     self.mapManager.init()
 
     self.player = Player(self)
-
-
+    
   def stop(self):
     self.isGameStarted = False
 
@@ -64,6 +63,9 @@ class Game:
       self.player.descend(Game.DESCENT_SPEED)
       self.mapManager.descend(Game.DESCENT_SPEED)
 
+      if (self.keyboard.key_pressed('ESC')):
+        self.stop()
+
     else:
       self.fade.draw()
       self.logo.draw()
@@ -71,6 +73,5 @@ class Game:
 
       if (self.keyboard.key_pressed('SPACE')):
         self.isGameStarted = True
-      
 
     self.window.update()
