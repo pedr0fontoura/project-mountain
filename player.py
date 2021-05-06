@@ -177,23 +177,6 @@ class Player:
 
             if (self.isJumping):
               self.isJumping = False
-          """ else:
-            # Bottom
-            if (self.dy < 0 and self.y >= platform.y + platform.sprite.height - Player.COLLISION_THRESHOLD):
-              self.dy = 0
-              self.y = platform.y + platform.sprite.height
-            
-            # Horizontal collision
-            if (platform.y >= self.y and platform.y <= self.y + self.sprite.y or platform.y + platform.sprite.height >= self.y and platform.y + platform.sprite.height <= self.y + self.sprite.y):
-              # Left
-              if (self.dx >= 0 and self.x <= platform.x):
-                self.dx = 0
-                self.x = platform.x - self.sprite.width
-              
-              # Right
-              elif (self.dx <= 0 and self.x + self.sprite.width >= platform.x + platform.sprite.width):
-                self.dx = 0
-                self.x = platform.x + platform.sprite.width """
   
   def descend(self, distance):
     self.y += distance * self.game.window.delta_time()

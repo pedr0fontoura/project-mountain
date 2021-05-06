@@ -3,19 +3,11 @@ import random
 import pygame
 from platform import Platform
 
-Vector2 = pygame.math.Vector2
-
 class MapManager:
   PLATFORM_WIDTH = 196
   PLATFORM_HEIGHT = 32
 
-  CHUNK_X_SIZE = PLATFORM_WIDTH
-  CHUNK_Y_SIZE = PLATFORM_HEIGHT * 3
-
-  DELTAS = [
-    Vector2(1, 1),
-    Vector2(-1, 1)
-  ]
+  DISTANCE_Y = 72
 
   def __init__(self, game):
     self.game = game
@@ -33,32 +25,18 @@ class MapManager:
     for i in range(1, platformNumber):
       self.platforms.append(Platform(self.game, self.game.GROUND_X + platformWidth * i, self.game.GROUND_Y, True))
 
+  def createPlatform(self):
+    if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 1):
+      x = random.randrange(0, self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH)
+
+      nPlatforms = len(self.platforms) - 1
+      y = self.platforms[nPlatforms].y - (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)
+
+      self.platforms.append(Platform(self.game, x, y))
+
   def generateMap(self):
-    mapWidth = 800
-
-    leftBoundary = self.game.WINDOW_WIDTH / 2 - mapWidth / 2
-    rightBoundary = (self.game.WINDOW_WIDTH / 2 + mapWidth / 2) - MapManager.PLATFORM_WIDTH
-    
-    y = self.game.WINDOW_HEIGHT
-
-    while (self.platformCount < 16):
-      x = random.randrange(leftBoundary, rightBoundary)
-      y -= 64
-
-      self.platforms.append(Platform(self.game, x, y))
-  
-  def populateMap(self):
-    mapWidth = 800
-
-    leftBoundary = self.game.WINDOW_WIDTH / 2 - mapWidth / 2
-    rightBoundary = (self.game.WINDOW_WIDTH / 2 + mapWidth / 2) - MapManager.PLATFORM_WIDTH
-
-    while (self.platformCount < 12):
-      x = random.randrange(leftBoundary, rightBoundary)
-      y = random.randrange(-62, -32)
-
-      self.platforms.append(Platform(self.game, x, y))
-
+    while (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT))):
+      self.createPlatform()
 
   def init(self):
     self.generateGround()
@@ -72,7 +50,8 @@ class MapManager:
 
   def tick(self):
     if (self.game.isGameStarted):
-      self.populateMap()
+      if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 1):
+        self.createPlatform()
 
     for platform in self.platforms:
       platform.tick()
