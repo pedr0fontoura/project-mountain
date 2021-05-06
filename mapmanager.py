@@ -12,27 +12,44 @@ class MapManager:
   def __init__(self, game):
     self.game = game
 
+    self.platformIdx = 0
     self.platformCount = 0
     self.platforms = []
 
   def generateGround(self):
-    self.platforms.append(Platform(self.game, self.game.GROUND_X, self.game.GROUND_Y, True))
+    self.platforms.append(Platform(self.game, 0, self.game.GROUND_X, self.game.GROUND_Y, True))
 
     platformWidth = self.platforms[0].sprite.width - 20
 
     platformNumber = int(math.ceil(self.game.window.width / platformWidth))
 
     for i in range(1, platformNumber):
-      self.platforms.append(Platform(self.game, self.game.GROUND_X + platformWidth * i, self.game.GROUND_Y, True))
+      self.platforms.append(Platform(self.game, 0, self.game.GROUND_X + platformWidth * i, self.game.GROUND_Y, True))
 
   def createPlatform(self):
-    if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 1):
-      x = random.randrange(0, self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH)
+    nPlatforms = len(self.platforms) - 1
+    
+    x = random.randrange(0, self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH)
+    y = self.game.GROUND_Y
 
-      nPlatforms = len(self.platforms) - 1
-      y = self.platforms[nPlatforms].y - (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)
+    if (nPlatforms >= 0):
+      lastPlatform = self.platforms[nPlatforms]
 
-      self.platforms.append(Platform(self.game, x, y))
+      options = []
+
+      if (lastPlatform.x - MapManager.PLATFORM_WIDTH > 0):
+        options.append(random.randrange(0, lastPlatform.x - MapManager.PLATFORM_WIDTH))
+
+      if (self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH > lastPlatform.x + MapManager.PLATFORM_WIDTH):
+        options.append(random.randrange(lastPlatform.x + MapManager.PLATFORM_WIDTH, self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH))
+
+      x = random.choice(options)
+
+      y = lastPlatform.y - (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)
+
+    self.platformIdx += 1
+
+    self.platforms.append(Platform(self.game, self.platformIdx, x, y))
 
   def generateMap(self):
     while (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT))):

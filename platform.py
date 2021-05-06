@@ -3,11 +3,8 @@ from PPlay.sprite import *
 class Platform:
   SPRITE_PATH = 'assets/platform.png'
 
-  idx = 0
-
-  def __init__(self, game, x, y, isGround = False):
-    self.id = Platform.idx
-    Platform.idx += 1
+  def __init__(self, game, id, x, y, isGround = False):
+    self.id = id
 
     self.game = game
 
@@ -21,7 +18,7 @@ class Platform:
 
     self.isGround = isGround
     
-    if (not isGround):
+    if (not self.isGround):
       self.game.mapManager.platformCount += 1
 
   def draw(self):

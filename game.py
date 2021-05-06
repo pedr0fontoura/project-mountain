@@ -45,9 +45,12 @@ class Game:
     self.mapManager.init()
 
     self.player = Player(self)
+
+    self.score = 0
     
   def stop(self):
     self.isGameStarted = False
+    self.score = 0
 
     self.player = Player(self)
     self.mapManager = MapManager(self)
@@ -60,8 +63,10 @@ class Game:
     self.player.tick()
 
     if (self.isGameStarted):
-      self.player.descend(Game.DESCENT_SPEED)
-      self.mapManager.descend(Game.DESCENT_SPEED)
+
+      if (self.score > 0):
+        self.player.descend(Game.DESCENT_SPEED)
+        self.mapManager.descend(Game.DESCENT_SPEED)
 
       if (self.keyboard.key_pressed('ESC')):
         self.stop()
