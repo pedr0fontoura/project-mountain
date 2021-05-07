@@ -110,10 +110,14 @@ class Game:
       if (self.keyboard.key_pressed('ESC')):
         self.stop()
 
+      self.window.draw_text("PONTUAÇÃO: {}".format(self.score), 0, 0, 16, (251, 242, 54), "Arial", True)
+
     else:
       self.fade.draw()
       self.logo.draw()
       self.action.draw()
+
+      self.window.draw_text("PONTUAÇÃO MÁXIMA: {}".format(self.highScore), Game.WINDOW_WIDTH / 2 - 160, Game.WINDOW_HEIGHT / 2, 24, (251, 242, 54), "Arial", True)
 
       if (self.keyboard.key_pressed('SPACE')):
         self.isGameStarted = True
