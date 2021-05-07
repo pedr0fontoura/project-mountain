@@ -4,7 +4,7 @@ from PPlay.window import *
 from PPlay.sprite import *
 
 from player import Player
-from platform import Platform
+from notplatform import Platform
 from mapmanager import MapManager
 
 class Game:

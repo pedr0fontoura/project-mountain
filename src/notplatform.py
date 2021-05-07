@@ -1,3 +1,5 @@
+# pyinstaller gets mad if we use native modules names for files
+
 from PPlay.sprite import *
 
 class Platform:

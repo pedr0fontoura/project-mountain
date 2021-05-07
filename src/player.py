@@ -1,5 +1,4 @@
 from PPlay.sprite import *
-from PPlay.collision import Collision
 
 class Player:
   SPEED = 450

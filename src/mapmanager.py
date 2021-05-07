@@ -1,7 +1,7 @@
 import math
 import random
 import pygame
-from platform import Platform
+from notplatform import Platform
 from highscore import HighScoreMarker
 
 class MapManager:
