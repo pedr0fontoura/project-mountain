@@ -24,7 +24,8 @@ class Game:
   GROUND_X = -10
   GROUND_Y = 710
 
-  DESCENT_SPEED = 60
+  DEFAULT_DESCENT_SPEED = 100
+  MAX_DESCENT_SPEED = 180
 
   def __init__(self):
     self.window = Window(Game.WINDOW_WIDTH, Game.WINDOW_HEIGHT)
@@ -47,6 +48,8 @@ class Game:
     self.action.y = self.window.height / 2 + self.action.height
 
     self.isGameStarted = False
+
+    self.descentSpeed = DEFAULT_DESCENT_SPEED = 80
 
     self.highScore = self.readHighScore()
     self.score = 0
@@ -79,6 +82,8 @@ class Game:
   def stop(self):
     self.isGameStarted = False
 
+    self.descentSpeed = DEFAULT_DESCENT_SPEED = 80
+
     if (self.score > self.highScore):
       self.highScore = self.score
       self.writeHighScore()
@@ -98,8 +103,8 @@ class Game:
     if (self.isGameStarted):
 
       if (self.score > 0):
-        self.player.descend(Game.DESCENT_SPEED)
-        self.mapManager.descend(Game.DESCENT_SPEED)
+        self.player.descend(self.descentSpeed)
+        self.mapManager.descend(self.descentSpeed)
 
       if (self.keyboard.key_pressed('ESC')):
         self.stop()

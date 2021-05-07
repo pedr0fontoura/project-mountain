@@ -8,7 +8,8 @@ class MapManager:
   PLATFORM_WIDTH = 196
   PLATFORM_HEIGHT = 32
 
-  DISTANCE_Y = 72
+  PLATFORM_DISTANCE_Y = 72
+  PLATFORM_DISTANCE_X = int(PLATFORM_WIDTH * 1.8)
 
   def __init__(self, game):
     self.game = game
@@ -37,18 +38,28 @@ class MapManager:
 
     if (nPlatforms >= 0):
       lastPlatform = self.platforms[nPlatforms]
+      
+      leftXStart = lastPlatform.x - (MapManager.PLATFORM_WIDTH + MapManager.PLATFORM_DISTANCE_X)
+      leftXEnd = lastPlatform.x - MapManager.PLATFORM_WIDTH
+      leftX = random.randrange(leftXStart, leftXEnd)
 
-      options = []
+      rightXStart = lastPlatform.x + MapManager.PLATFORM_WIDTH
+      rightXEnd = lastPlatform.x + MapManager.PLATFORM_WIDTH + MapManager.PLATFORM_DISTANCE_X
+      rightX = random.randrange(rightXStart, rightXEnd)
 
-      if (lastPlatform.x - MapManager.PLATFORM_WIDTH > 0):
-        options.append(random.randrange(0, lastPlatform.x - MapManager.PLATFORM_WIDTH))
-
-      if (self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH > lastPlatform.x + MapManager.PLATFORM_WIDTH):
-        options.append(random.randrange(lastPlatform.x + MapManager.PLATFORM_WIDTH, self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH))
+      options = [leftX, rightX]
 
       x = random.choice(options)
 
-      y = lastPlatform.y - (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)
+      isDifferent = lambda element: element != x
+
+      if (x < 0):
+        x = next(filter(isDifferent, options))
+
+      if (x > self.game.WINDOW_WIDTH - MapManager.PLATFORM_WIDTH):
+        x = next(filter(isDifferent, options))
+
+      y = lastPlatform.y - (MapManager.PLATFORM_DISTANCE_Y + MapManager.PLATFORM_HEIGHT)
 
     self.platformIdx += 1
 
@@ -58,7 +69,7 @@ class MapManager:
     self.platforms.append(Platform(self.game, self.platformIdx, x, y))
 
   def generateMap(self):
-    while (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT))):
+    while (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.PLATFORM_DISTANCE_Y + MapManager.PLATFORM_HEIGHT))):
       self.createPlatform()
 
   def init(self):
@@ -76,7 +87,7 @@ class MapManager:
 
   def tick(self):
     if (self.game.isGameStarted):
-      if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 1):
+      if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.PLATFORM_DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 2):
         self.createPlatform()
 
     if (self.highScoreMarker):

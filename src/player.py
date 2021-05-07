@@ -179,7 +179,10 @@ class Player:
               self.isJumping = False
 
             if (platform.id > self.game.score):
-              self.game.score = platform.id
+              self.game.score += 1
+
+              if (self.game.descentSpeed < self.game.MAX_DESCENT_SPEED):
+                self.game.descentSpeed += 1
   
   def descend(self, distance):
     self.y += distance * self.game.window.delta_time()
