@@ -11,7 +11,7 @@ class Game:
 
   WINDOW_WIDTH = 1280
   WINDOW_HEIGHT = 720
-  TITLE = 'Project Mountain v1.0.0-alpha'
+  TITLE = 'Project Mountain v1.0.0'
   DEBUG = 0
 
   SAVE_PATH = 'save.txt'
@@ -25,6 +25,7 @@ class Game:
   GROUND_Y = 710
 
   DEFAULT_DESCENT_SPEED = 100
+  DESCENT_FACTOR = 2
   MAX_DESCENT_SPEED = 180
 
   def __init__(self):

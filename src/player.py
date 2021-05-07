@@ -182,7 +182,7 @@ class Player:
               self.game.score += 1
 
               if (self.game.descentSpeed < self.game.MAX_DESCENT_SPEED):
-                self.game.descentSpeed += 1
+                self.game.descentSpeed += self.game.DESCENT_FACTOR
   
   def descend(self, distance):
     self.y += distance * self.game.window.delta_time()
