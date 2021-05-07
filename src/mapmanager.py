@@ -2,6 +2,7 @@ import math
 import random
 import pygame
 from platform import Platform
+from highscore import HighScoreMarker
 
 class MapManager:
   PLATFORM_WIDTH = 196
@@ -15,6 +16,8 @@ class MapManager:
     self.platformIdx = 0
     self.platformCount = 0
     self.platforms = []
+
+    self.highScoreMarker = None
 
   def generateGround(self):
     self.platforms.append(Platform(self.game, 0, self.game.GROUND_X, self.game.GROUND_Y, True))
@@ -49,6 +52,9 @@ class MapManager:
 
     self.platformIdx += 1
 
+    if (self.platformIdx == self.game.highScore):
+      self.highScoreMarker = HighScoreMarker(self.game, x + MapManager.PLATFORM_WIDTH / 2, y)
+
     self.platforms.append(Platform(self.game, self.platformIdx, x, y))
 
   def generateMap(self):
@@ -65,10 +71,16 @@ class MapManager:
     for platform in self.platforms:
       platform.y += distance * deltaTime
 
+    if (self.highScoreMarker):
+      self.highScoreMarker.y += distance * deltaTime
+
   def tick(self):
     if (self.game.isGameStarted):
       if (self.platformCount < int(self.game.WINDOW_HEIGHT / (MapManager.DISTANCE_Y + MapManager.PLATFORM_HEIGHT)) + 1):
         self.createPlatform()
+
+    if (self.highScoreMarker):
+      self.highScoreMarker.tick()
 
     for platform in self.platforms:
       platform.tick()

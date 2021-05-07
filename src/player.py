@@ -65,11 +65,11 @@ class Player:
     moveRight.set_total_duration(Player.SPRITE_MOVE_ANIM_DURATION)
 
     jumpLeft = Sprite(Player.SPRITE_JUMP_LEFT_PATH, Player.SPRITE_JUMP_FRAMES)
-    jumpLeft.set_sequence(0, 3, False)
+    jumpLeft.set_sequence(0, Player.SPRITE_JUMP_FRAMES, False)
     jumpLeft.set_total_duration(Player.SPRITE_JUMP_ANIM_DURATION)
 
     jumpRight = Sprite(Player.SPRITE_JUMP_RIGHT_PATH, Player.SPRITE_JUMP_FRAMES)
-    jumpRight.set_sequence(0, 3, False)
+    jumpRight.set_sequence(0, Player.SPRITE_JUMP_FRAMES, False)
     jumpRight.set_total_duration(Player.SPRITE_JUMP_ANIM_DURATION)
 
     self.sprites.append(idleLeft)

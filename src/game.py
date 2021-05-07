@@ -48,19 +48,19 @@ class Game:
 
     self.isGameStarted = False
 
+    self.highScore = self.readHighScore()
+    self.score = 0
+
     self.mapManager = MapManager(self)
     self.mapManager.init()
 
     self.player = Player(self)
 
-    self.highScore = self.readHighScore()
-    self.score = 0
-
   def readHighScore(self):
     data = None
 
     try:
-      file = open(path.join(self.dir, Game.SAVE_PATH), 'w')
+      file = open(path.join(self.dir, Game.SAVE_PATH), 'r')
       data = int(file.read())
       file.close()
     except:
