@@ -27,3 +27,4 @@ O jogo foi construido utilizando o **PPlay**, um framework para criação de jog
 ## Créditos
 
 - [Hiker sprite](https://the-baldur.itch.io/pixelart-hiker)
+- [Wood sign sprite](https://elthen.itch.io/pixel-art-destructible-objects)
